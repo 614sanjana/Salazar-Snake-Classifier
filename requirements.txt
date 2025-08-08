@@ -1,5 +1,4 @@
 tensorflow==2.20.0
-streamlit==1.40.1
-pyngrok
+streamlit
 pillow
 numpy
