@@ -1,6 +1,4 @@
-Here’s your corrected and properly formatted `README.md`. I’ve fixed the Markdown syntax, code blocks, and headers so it will render correctly on GitHub:
 
-````markdown
 # Salazar – Snake Classifier
 
 Salazar is a minimalistic web app that classifies snake images as **Venomous** or **Non-Venomous** using a pre-trained deep learning model. The app is built with **Streamlit** and TensorFlow.
@@ -53,5 +51,4 @@ streamlit run app.py
 * Uses **MobileNetV2** as the base model with transfer learning.
 
 
-If you want, I can also **make an even shorter, super-clean version** for GitHub that’s just 100–120 lines max but still professional. Do you want me to do that?
-```
+
