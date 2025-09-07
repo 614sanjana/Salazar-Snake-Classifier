@@ -1,7 +1,7 @@
 
 # Salazar – Snake Classifier
 
-Salazar is a minimalistic web app that classifies snake images as **Venomous** or **Non-Venomous** using a pre-trained deep learning model. The app is built with Streamlit and TensorFlow.
+Salazar classifies snake images as **Venomous** or **Non-Venomous** using a pre-trained deep learning model.
 
 ## Features
 
@@ -35,14 +35,8 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the app locally:
-
-```bash
-streamlit run app.py
-```
-
 * Upload an image of a snake (`jpg` or `png`).
-* The app will display the predicted class: **Venomous** or **Non-Venomous**.
+* The displays the predicted class: **Venomous** or **Non-Venomous**.
 
 ## Model
 
