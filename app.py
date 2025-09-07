@@ -1,29 +1,50 @@
-import streamlit as st
 import tensorflow as tf
+from google.colab import files, drive
+
+# Step 1: Upload local model
+uploaded = files.upload()   # choose snake_classifier_model.keras
+
+# Step 2: Load the uploaded model
+model = tf.keras.models.load_model("snake_classifier_model.keras")
+print(" Model loaded successfully")
+
+# Step 3: Save permanently to Google Drive
+drive.mount('/content/drive')
+!mkdir -p /content/drive/MyDrive/SNAKE_CLASSIFIER
+!cp snake_classifier_model.keras /content/drive/MyDrive/SNAKE_CLASSIFIER/
+print("Model copied to Google Drive: /content/drive/MyDrive/SNAKE_CLASSIFIER/")
+
+import gradio as gr
 import numpy as np
 from tensorflow.keras.preprocessing import image
 
-# Load the model
-model = tf.keras.models.load_model("snake_classifier_model.keras")
+labels = ['Non-Venomous', 'Venomous']
 
-# Class labels
-classes = ["Non-Venomous", "Venomous"]
+def predict_snake(img):
+    try:
+        img = img.convert("RGB")  # make sure 3 channels
+        img = img.resize((160, 160))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0) / 255.0
 
-st.title("Snake Classifier")
+        preds = model.predict(img_array)
+        class_idx = np.argmax(preds, axis=1)[0]
+        confidence = preds[0][class_idx]
 
-# Upload image
-uploaded_file = st.file_uploader("Upload a snake image", type=["jpg", "png"])
-if uploaded_file is not None:
-    # Load image with the correct size and channels
-    img = image.load_img(uploaded_file, target_size=(160, 160))  # 160x160 RGB
-    x = image.img_to_array(img)
-    x = (x / 127.5) - 1  # normalize as in training
-    x = np.expand_dims(x, axis=0)  # add batch dimension
+        return {labels[class_idx]: float(confidence)}
 
-    # Predict
-    prediction = model.predict(x)
-    
-    # Since your model uses BinaryCrossentropy from logits
-    pred_class = int(tf.sigmoid(prediction) > 0.5)
-    
-    st.write("Predicted class:", classes[pred_class])
+    except Exception as e:
+        print("⚠️ Error inside predict_snake:", e)  # logs in Colab output
+        raise e   # forces Gradio to display error trace
+
+
+# Gradio app
+iface = gr.Interface(
+    fn=predict_snake,
+    inputs=gr.Image(type="pil"),
+    outputs=gr.Label(num_top_classes=2),
+    title="Salazar 🐍",
+    description="Upload a snake image to classify whether it's Venomous or Non-Venomous."
+)
+
+iface.launch()
